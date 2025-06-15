@@ -1,49 +1,528 @@
 import React, { useState } from 'react';
 
-// Header Component
-export const Header = ({ currentPage, setCurrentPage }) => {
-  return (
-    <header className="bg-white shadow-sm border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          <div className="flex items-center">
-            <h1 
-              className="text-2xl font-bold text-purple-900 cursor-pointer"
-              onClick={() => setCurrentPage('home')}
-            >
-              NEXTPITCH
-            </h1>
-          </div>
-          
-          <nav className="hidden md:flex space-x-8">
-            <button
-              className={`text-gray-700 hover:text-purple-900 font-medium ${currentPage === 'howitworks' ? 'text-purple-900' : ''}`}
-              onClick={() => setCurrentPage('howitworks')}
-            >
-              How it works
-            </button>
-            <button
-              className={`text-gray-700 hover:text-purple-900 font-medium ${currentPage === 'competitions' ? 'text-purple-900' : ''}`}
-              onClick={() => setCurrentPage('competitions')}
-            >
-              Competitions
-            </button>
-            <button
-              className={`text-gray-700 hover:text-purple-900 font-medium ${currentPage === 'pricing' ? 'text-purple-900' : ''}`}
-              onClick={() => setCurrentPage('pricing')}
-            >
-              Pricing
-            </button>
-          </nav>
+// Login Modal Component
+export const LoginModal = ({ isOpen, onClose, onSignup }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-          <div className="flex items-center">
-            <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300">
-              Login/Signup
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-purple-900 bg-opacity-75 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        
+        <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">Login</h2>
+        
+        <div className="text-center mb-6">
+          <span className="text-gray-600">New to NextPitch? </span>
+          <button 
+            onClick={onSignup}
+            className="text-purple-600 font-medium hover:text-purple-800"
+          >
+            Sign up
+          </button>
+        </div>
+
+        <form className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email *
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password *
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div className="text-center">
+            <button type="button" className="text-sm text-gray-600 hover:text-purple-600">
+              <em>Forgotten password? Click here</em>
             </button>
           </div>
+
+          <button
+            type="submit"
+            className="w-full bg-purple-900 text-white py-3 rounded-lg font-medium hover:bg-purple-800 transition-all duration-300"
+          >
+            Log In
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Account Type Selection Modal
+export const AccountTypeModal = ({ isOpen, onClose, onSelectType, onBackToLogin }) => {
+  if (!isOpen) return null;
+
+  const accountTypes = [
+    { id: 'voter', name: 'Voter', icon: '✓' },
+    { id: 'student', name: 'Student', icon: '🎓' },
+    { id: 'educator', name: 'Educator', icon: '📋' },
+    { id: 'judge', name: 'Judge', icon: '📄' },
+    { id: 'comment', name: 'Comment', icon: '💬' }
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-purple-900 bg-opacity-75 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-8 max-w-4xl w-full mx-4 relative">
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div className="text-right mb-4">
+          <span className="text-gray-600">Already have an account? </span>
+          <button 
+            onClick={onBackToLogin}
+            className="text-purple-600 font-medium hover:text-purple-800"
+          >
+            Login
+          </button>
+        </div>
+        
+        <h2 className="text-2xl font-bold text-purple-900 mb-2">Welcome to Next Pitch!</h2>
+        <p className="text-gray-600 mb-8">What kind of account do you want to create?</p>
+        
+        <div className="grid grid-cols-5 gap-4 mb-8">
+          {accountTypes.map((type) => (
+            <button
+              key={type.id}
+              onClick={() => onSelectType(type.id)}
+              className="bg-gray-100 hover:bg-purple-100 border-2 border-purple-600 rounded-xl p-6 text-center transition-all duration-300 hover:scale-105"
+            >
+              <div className="text-3xl mb-2">{type.icon}</div>
+              <div className="text-purple-900 font-medium">{type.name}</div>
+            </button>
+          ))}
+        </div>
+
+        <div className="text-center text-gray-500">
+          group
         </div>
       </div>
-    </header>
+    </div>
+  );
+};
+
+// Educator Signup Modal
+export const EducatorSignupModal = ({ isOpen, onClose, onBack }) => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    educatorId: 'ti-fe33',
+    schoolId: '',
+    schoolDistrict: '',
+    email: '',
+    password: ''
+  });
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-purple-900 bg-opacity-75 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+        <div className="flex items-center mb-6">
+          <button 
+            onClick={onBack}
+            className="mr-4 text-gray-400 hover:text-gray-600"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h2 className="text-xl font-bold text-purple-600">Educator Access</h2>
+          <button 
+            onClick={onClose}
+            className="ml-auto text-gray-400 hover:text-gray-600"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <p className="text-center text-gray-600 mb-6">Sign up as an Educator so your students can submit the next pitch.</p>
+
+        <form className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                First Name *
+              </label>
+              <input
+                type="text"
+                value={formData.firstName}
+                onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Last Name *
+              </label>
+              <input
+                type="text"
+                value={formData.lastName}
+                onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <span className="text-orange-600">Educator ID Referral - If you do not have one, use ti-fe33 *</span>
+            </label>
+            <input
+              type="text"
+              value={formData.educatorId}
+              onChange={(e) => setFormData({...formData, educatorId: e.target.value})}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              School ID (You can always add this later)
+            </label>
+            <input
+              type="text"
+              value={formData.schoolId}
+              onChange={(e) => setFormData({...formData, schoolId: e.target.value})}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <span className="text-orange-600">School District ID (You can always add this later)</span>
+            </label>
+            <input
+              type="text"
+              value={formData.schoolDistrict}
+              onChange={(e) => setFormData({...formData, schoolDistrict: e.target.value})}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email *
+            </label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password *
+            </label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({...formData, password: e.target.value})}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-purple-900 text-white py-3 rounded-lg font-medium hover:bg-purple-800 transition-all duration-300"
+          >
+            Sign Up
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Student Signup Modal
+export const StudentSignupModal = ({ isOpen, onClose, onBack }) => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    educatorId: '',
+    grade: '',
+    email: '',
+    password: ''
+  });
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-purple-900 bg-opacity-75 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+        <div className="flex items-center mb-6">
+          <button 
+            onClick={onBack}
+            className="mr-4 text-gray-400 hover:text-gray-600"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h2 className="text-xl font-bold text-purple-600">Student Access</h2>
+          <button 
+            onClick={onClose}
+            className="ml-auto text-gray-400 hover:text-gray-600"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <p className="text-center text-gray-600 mb-6">Sign up to submit your pitch.</p>
+
+        <form className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                First Name *
+              </label>
+              <input
+                type="text"
+                value={formData.firstName}
+                onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Last Name *
+              </label>
+              <input
+                type="text"
+                value={formData.lastName}
+                onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Educator ID *
+              </label>
+              <input
+                type="text"
+                value={formData.educatorId}
+                onChange={(e) => setFormData({...formData, educatorId: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Grade *
+              </label>
+              <input
+                type="text"
+                value={formData.grade}
+                onChange={(e) => setFormData({...formData, grade: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email *
+            </label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password *
+            </label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({...formData, password: e.target.value})}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-purple-900 text-white py-3 rounded-lg font-medium hover:bg-purple-800 transition-all duration-300"
+          >
+            Sign Up
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Header Component
+export const Header = ({ currentPage, setCurrentPage }) => {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showAccountTypeModal, setShowAccountTypeModal] = useState(false);
+  const [showEducatorSignup, setShowEducatorSignup] = useState(false);
+  const [showStudentSignup, setShowStudentSignup] = useState(false);
+
+  const handleLoginClick = () => {
+    setShowLoginModal(true);
+  };
+
+  const handleSignupClick = () => {
+    setShowLoginModal(false);
+    setShowAccountTypeModal(true);
+  };
+
+  const handleAccountTypeSelect = (type) => {
+    setShowAccountTypeModal(false);
+    if (type === 'educator') {
+      setShowEducatorSignup(true);
+    } else if (type === 'student') {
+      setShowStudentSignup(true);
+    }
+    // Add other account types as needed
+  };
+
+  const closeAllModals = () => {
+    setShowLoginModal(false);
+    setShowAccountTypeModal(false);
+    setShowEducatorSignup(false);
+    setShowStudentSignup(false);
+  };
+
+  const goBackToAccountType = () => {
+    setShowEducatorSignup(false);
+    setShowStudentSignup(false);
+    setShowAccountTypeModal(true);
+  };
+
+  const goBackToLogin = () => {
+    setShowAccountTypeModal(false);
+    setShowLoginModal(true);
+  };
+
+  return (
+    <>
+      <header className="bg-white shadow-sm border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center">
+              <h1 
+                className="text-2xl font-bold text-purple-900 cursor-pointer"
+                onClick={() => setCurrentPage('home')}
+              >
+                NEXTPITCH
+              </h1>
+            </div>
+            
+            <nav className="hidden md:flex space-x-8">
+              <button
+                className={`text-gray-700 hover:text-purple-900 font-medium ${currentPage === 'howitworks' ? 'text-purple-900' : ''}`}
+                onClick={() => setCurrentPage('howitworks')}
+              >
+                How it works
+              </button>
+              <button
+                className={`text-gray-700 hover:text-purple-900 font-medium ${currentPage === 'competitions' ? 'text-purple-900' : ''}`}
+                onClick={() => setCurrentPage('competitions')}
+              >
+                Competitions
+              </button>
+              <button
+                className={`text-gray-700 hover:text-purple-900 font-medium ${currentPage === 'pricing' ? 'text-purple-900' : ''}`}
+                onClick={() => setCurrentPage('pricing')}
+              >
+                Pricing
+              </button>
+            </nav>
+
+            <div className="flex items-center">
+              <button 
+                onClick={handleLoginClick}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
+              >
+                Login/Signup
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <LoginModal 
+        isOpen={showLoginModal}
+        onClose={closeAllModals}
+        onSignup={handleSignupClick}
+      />
+
+      <AccountTypeModal 
+        isOpen={showAccountTypeModal}
+        onClose={closeAllModals}
+        onSelectType={handleAccountTypeSelect}
+        onBackToLogin={goBackToLogin}
+      />
+
+      <EducatorSignupModal 
+        isOpen={showEducatorSignup}
+        onClose={closeAllModals}
+        onBack={goBackToAccountType}
+      />
+
+      <StudentSignupModal 
+        isOpen={showStudentSignup}
+        onClose={closeAllModals}
+        onBack={goBackToAccountType}
+      />
+    </>
   );
 };
 
