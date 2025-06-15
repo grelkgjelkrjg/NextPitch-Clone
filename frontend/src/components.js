@@ -982,122 +982,119 @@ export const HowItWorksPage = () => {
   );
 };
 
-// Competitions Page Component
+// Competitions Search Page Component
 export const CompetitionsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [location, setLocation] = useState('');
+  const [activeTab, setActiveTab] = useState('competitions');
 
   const mockCompetitions = [
     {
       id: 1,
-      title: "Young Entrepreneurs Challenge",
-      school: "Lincoln Elementary",
-      location: "Chicago, IL",
-      category: "Elementary",
-      participants: 45,
-      image: "https://images.unsplash.com/photo-1541178735493-479c1a27ed24"
-    },
-    {
-      id: 2,
-      title: "Innovation Fair 2025",
-      school: "Roosevelt Middle School", 
-      location: "Denver, CO",
-      category: "Middle School",
-      participants: 78,
-      image: "https://images.pexels.com/photos/7789851/pexels-photo-7789851.jpeg"
-    },
-    {
-      id: 3,
-      title: "Tech Solutions Contest",
-      school: "Washington High School",
-      location: "Austin, TX", 
-      category: "High School",
-      participants: 92,
-      image: "https://images.unsplash.com/photo-1528921581519-52b9d779df2b"
-    },
-    {
-      id: 4,
-      title: "Community Impact Projects",
-      school: "Community Learning Center",
-      location: "Portland, OR",
-      category: "Community",
-      participants: 34,
-      image: "https://images.pexels.com/photos/9221770/pexels-photo-9221770.jpeg"
+      title: "Human Rights Watch",
+      school: "Carson Junior High",
+      date: "5/1/26, 2:00 AM",
+      description: "Create a project that raises awareness about human rights. Speak up for fairness, safety, and justice for everyone!",
+      pitches: 0,
+      comments: 0,
+      image: "https://images.pexels.com/photos/16053029/pexels-photo-16053029.jpeg"
     }
   ];
 
+  const tabs = [
+    { id: 'competitions', name: 'Competitions' },
+    { id: 'pitches', name: 'Pitches' },
+    { id: 'schools', name: 'Schools' },
+    { id: 'districts', name: 'Districts' }
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Discover Active Competitions
-          </h1>
-          <p className="text-xl text-purple-100 mb-8">
-            Join student competitions happening around the world
-          </p>
-        </div>
-      </section>
+    <div className="min-h-screen bg-white">
+      {/* Header with Home button */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <button 
+          onClick={() => window.history.back()}
+          className="flex items-center text-purple-900 hover:text-purple-700 mb-6"
+        >
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Home
+        </button>
 
-      {/* Search Section */}
-      <section className="py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Find Competitions</h2>
-            <div className="flex flex-col md:flex-row gap-4">
-              <input
-                type="text"
-                placeholder="Search by topic, school, or keyword"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Location"
-                className="w-full md:w-48 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
-              <button className="bg-purple-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-800 transition-all duration-300">
-                Search
-              </button>
-            </div>
-          </div>
+        <h1 className="text-3xl font-bold text-purple-900 mb-2">Search</h1>
+        <div className="flex items-center text-gray-500 mb-8">
+          <span>Showing Results for:</span>
+          <span className="ml-4 text-gray-400">Competition ID / Topic / City / State / Industry</span>
         </div>
-      </section>
 
-      {/* Competitions Grid */}
-      <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {mockCompetitions.map((competition) => (
-              <div key={competition.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden cursor-pointer">
-                <img
-                  src={competition.image}
-                  alt={competition.title}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full">
-                      {competition.category}
-                    </span>
-                    <span className="text-gray-500 text-sm">{competition.participants} participants</span>
+        {/* Tab Navigation */}
+        <div className="flex space-x-1 bg-gray-100 rounded-lg p-1 mb-8 max-w-md">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                activeTab === tab.id
+                  ? 'bg-white text-purple-900 shadow-sm'
+                  : 'text-gray-600 hover:text-purple-900'
+              }`}
+            >
+              {tab.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Competition Results */}
+        <div className="space-y-6">
+          {mockCompetitions.map((competition) => (
+            <div key={competition.id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+              <div className="flex gap-6">
+                <div className="flex-shrink-0">
+                  <img
+                    src={competition.image}
+                    alt={competition.title}
+                    className="w-32 h-24 object-cover rounded-lg"
+                  />
+                </div>
+                
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3 className="text-xl font-bold text-purple-900 mb-1">
+                        {competition.title}
+                      </h3>
+                      <p className="text-gray-600 mb-1">{competition.school}</p>
+                      <p className="text-gray-500 text-sm">{competition.date}</p>
+                    </div>
+                    
+                    <div className="text-right">
+                      <div className="flex space-x-8">
+                        <div className="text-center">
+                          <div className="text-sm text-gray-500 mb-1">Pitches</div>
+                          <div className="text-2xl font-bold text-purple-900">{competition.pitches}</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-sm text-gray-500 mb-1">Comments</div>
+                          <div className="text-2xl font-bold text-purple-900">{competition.comments}</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{competition.title}</h3>
-                  <p className="text-gray-600 text-sm mb-1">{competition.school}</p>
-                  <p className="text-gray-500 text-sm">{competition.location}</p>
-                  <button className="mt-4 w-full bg-purple-600 text-white py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors duration-300">
-                    View Competition
-                  </button>
+                  
+                  <p className="text-gray-700 mb-4 leading-relaxed">
+                    {competition.description}
+                  </p>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </section>
+
+        {/* No more results message */}
+        <div className="text-center py-12">
+          <p className="text-gray-500">No more competitions found matching your search criteria.</p>
+        </div>
+      </div>
     </div>
   );
 };
